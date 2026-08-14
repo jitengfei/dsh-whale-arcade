@@ -9,4 +9,3 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 export declare const inject: string[];
 /** Register the floating arcade in the frame-wide overlay. */
 export declare function apply(ctx: ClientContext): void;
-//# sourceMappingURL=index.d.ts.map

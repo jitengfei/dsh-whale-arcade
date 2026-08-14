@@ -13,6 +13,7 @@ export declare const zh: {
     readonly score: "得分";
     readonly best: "最高分";
     readonly leaderboard: "本地排行榜";
+    readonly duration: "有效用时";
     readonly empty: "完成一局后，这里会出现成绩";
     readonly over: "本局结束";
     readonly 'jump.name': "鲸鱼跃浪";
@@ -24,4 +25,3 @@ export declare const zh: {
 };
 export type WhaleArcadeKey = keyof typeof zh;
 export declare const en: Record<WhaleArcadeKey, string>;
-//# sourceMappingURL=locales.d.ts.map

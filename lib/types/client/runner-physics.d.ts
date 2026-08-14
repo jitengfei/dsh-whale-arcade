@@ -27,4 +27,3 @@ export interface RunnerObstacleModel {
 }
 /** Friendly collision shapes expressed in the same pixel coordinates as the Canvas scene. */
 export declare function runnerCollides(width: number, height: number, whaleY: number, obstacle: RunnerObstacleModel): boolean;
-//# sourceMappingURL=runner-physics.d.ts.map

@@ -18,4 +18,3 @@ interface CatchHitOutcome {
 }
 export declare function catchHitOutcome(width: number, height: number, whaleX: number, items: readonly CatchHitItem[]): CatchHitOutcome;
 export {};
-//# sourceMappingURL=catch-physics.d.ts.map

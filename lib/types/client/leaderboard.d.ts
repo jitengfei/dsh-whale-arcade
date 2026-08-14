@@ -8,4 +8,3 @@ export interface ScoreEntry {
 export declare function readScores(game: GameId): ScoreEntry[];
 /** Insert a completed score and return the newly ordered table. */
 export declare function recordScore(game: GameId, entry: ScoreEntry): ScoreEntry[];
-//# sourceMappingURL=leaderboard.d.ts.map

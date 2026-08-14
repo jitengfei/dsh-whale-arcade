@@ -28,4 +28,3 @@ export declare function runnerGapRange(elapsedSeconds: number, band: RunnerGapBa
 /** Generate one obstacle wave with staged variety and a reaction-time-derived spatial gap. */
 export declare function createRunnerWave(elapsedSeconds: number, speed: number, history?: RunnerHistory, random?: () => number): RunnerWave;
 export {};
-//# sourceMappingURL=runner-design.d.ts.map

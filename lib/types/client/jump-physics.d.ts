@@ -4,4 +4,3 @@ export interface CavePosition extends CaveDesign {
 }
 export declare function jumpCollides(width: number, height: number, whaleY: number, cave: CavePosition): boolean;
 export declare function cavePassedWhale(width: number, cave: CavePosition): boolean;
-//# sourceMappingURL=jump-physics.d.ts.map

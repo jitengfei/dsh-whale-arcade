@@ -14,6 +14,7 @@ export const zh = {
   'score': '得分',
   'best': '最高分',
   'leaderboard': '本地排行榜',
+  'duration': '有效用时',
   'empty': '完成一局后，这里会出现成绩',
   'over': '本局结束',
   'jump.name': '鲸鱼跃浪',
@@ -29,7 +30,7 @@ export type WhaleArcadeKey = keyof typeof zh
 export const en: Record<WhaleArcadeKey, string> = {
   'launcher': 'Open Whale Arcade', 'title': 'Whale Arcade', 'subtitle': 'Dive deep and play a quick round',
   'close': 'Close arcade', 'back': 'Back to games', 'play': 'Play', 'pause': 'Pause', 'resume': 'Resume',
-  'restart': 'Restart', 'score': 'Score', 'best': 'Best', 'leaderboard': 'Local leaderboard',
+  'restart': 'Restart', 'score': 'Score', 'best': 'Best', 'leaderboard': 'Local leaderboard', 'duration': 'Active time',
   'empty': 'Finish a round to post a score', 'over': 'Round over',
   'jump.name': 'Whale Wave', 'jump.desc': 'Click or press Space, ↑, or W to cross coral caves',
   'catch.name': 'Blue Whale Treasure', 'catch.desc': 'Catch varied sea friends; avoid jellyfish and urchins',

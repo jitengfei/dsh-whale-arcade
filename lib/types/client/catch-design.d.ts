@@ -19,4 +19,3 @@ export declare function scheduleCatchSpawn(active: readonly CatchArrival[], pend
     arrivalAt: number;
 };
 export declare function createCatchDesign(elapsedSeconds: number, random?: () => number): CatchDesign;
-//# sourceMappingURL=catch-design.d.ts.map

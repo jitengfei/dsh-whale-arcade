@@ -1,6 +1,7 @@
 /* eslint-disable @stylistic/max-len, @stylistic/member-delimiter-style, @stylistic/semi */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
+import { createActiveTimer } from './active-timer.ts'
 import { catchSpawnDelay, createCatchDesign, scheduleCatchSpawn, type CatchDesign } from './catch-design.ts'
 import { catchHitOutcome } from './catch-physics.ts'
 import { createCave, jumpSpeed, positionNextCave } from './jump-design.ts'
@@ -61,14 +62,29 @@ function CatalogIcon({ kind }: { kind: 'wave' | 'star' | 'coral' }) {
   return <span className={css.catalogIcon}>{kind === 'wave' ? <><WhaleMark/><i className={css.miniWave}/></> : <OceanIcon kind={kind}/>}</span>
 }
 
-function GameChrome({ game, phase, score, startedAt, onPhase, onScore, onBack, onClose, renderGame, t }: {
-  game: GameId, phase: Phase, score: number, startedAt: number, onPhase: (phase: Phase) => void, onScore: (score: number) => void
+function formatDuration(durationMs: number) {
+  const seconds = Math.max(0, Math.round(durationMs / 1000))
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+}
+
+function Leaderboard({ game, onGame, t }: { game: GameId; onGame: (game: GameId) => void; t: Props['t'] }) {
+  const scores = readScores(game)
+  return <section className={css.scores} aria-label={t('leaderboard')}>
+    <div className={css.scoresHeader}><h3>{t('leaderboard')}</h3><div className={css.scoreTabs} role="group" aria-label={t('leaderboard')}>
+      {(Object.keys(GAME_COPY) as GameId[]).map(id => <button type="button" key={id} aria-pressed={id === game} onClick={() =>{  onGame(id); }}>{t(GAME_COPY[id].name)}</button>)}
+    </div></div>
+    {scores.length > 0 ? <ol>{scores.map((entry, index) => <li key={`${entry.achievedAt}-${index}`}><span>#{index + 1}</span><strong aria-label={`${t('score')} ${entry.score}`}>{entry.score}</strong><time dateTime={`PT${entry.durationMs / 1000}S`} title={t('duration')}>{formatDuration(entry.durationMs)}</time></li>)}</ol> : <p className={css.empty}>{t('empty')}</p>}
+  </section>
+}
+
+function GameChrome({ game, phase, score, getDuration, onPhase, onScore, onBack, onClose, renderGame, t }: {
+  game: GameId, phase: Phase, score: number, getDuration: () => number, onPhase: (phase: Phase) => void, onScore: (score: number) => void
   onBack: () => void, onClose: () => void
   renderGame: (finish: (score: number) => void) => React.ReactNode, t: Props['t']
 }) {
   const finish = useCallback((finalScore: number) => {
-    recordScore(game, { score: finalScore, durationMs: Date.now() - startedAt, achievedAt: Date.now() }); onScore(finalScore); onPhase('over')
-  }, [game, onPhase, onScore, startedAt])
+    try { recordScore(game, { score: finalScore, durationMs: getDuration(), achievedAt: Date.now() }) } finally { onScore(finalScore); onPhase('over') }
+  }, [game, getDuration, onPhase, onScore])
   return <div className={css.game} data-phase={phase} data-game={game}>
     <div className={css.gameBar}><button type="button" className={css.backButton} onClick={onBack} aria-label={t('back')}>←</button><span className={css.hint}>{t(GAME_COPY[game].desc)}</span><span>{t('score')} <strong>{String(score).padStart(5, '0')}</strong></span><span>{t('best')} <strong>{String(readScores(game)[0]?.score ?? 0).padStart(5, '0')}</strong></span><button type="button" onClick={() =>{  onPhase(phase === 'paused' ? 'playing' : 'paused'); }} disabled={phase === 'ready' || phase === 'over'}>{phase === 'paused' ? t('resume') : t('pause')}</button><button type="button" className={css.closeButton} onClick={onClose} aria-label={t('close')}>×</button></div>
     {renderGame(finish)}
@@ -153,7 +169,14 @@ function CatchGame({ phase, round, score, onScore, finish }: { phase: Phase; rou
 type RunnerObstacle = RunnerObstacleModel & { id: number; gapAfter: number }
 
 function RunnerScene({ whaleY, obstacles, splash }: { whaleY: number; obstacles: RunnerObstacle[]; splash: SplashState | null }) {
-  const canvas = useRef<HTMLCanvasElement>(null)
+  const canvas = useRef<HTMLCanvasElement>(null); const [sizeRevision, setSizeRevision] = useState(0)
+  useEffect(() => {
+    const element = canvas.current
+    if (!element || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(() =>{  setSizeRevision(value => value + 1); })
+    observer.observe(element)
+    return () =>{  observer.disconnect(); }
+  }, [])
   useEffect(() => {
     const element = canvas.current
     if (!element) return
@@ -215,7 +238,7 @@ function RunnerScene({ whaleY, obstacles, splash }: { whaleY: number; obstacles:
       for (const direction of [-1, -.4, .4, 1]) { context.beginPath(); context.arc(width * splash.x / 100 + direction * age * 24, seaY - Math.sin(age * Math.PI) * (17 + Math.abs(direction) * 10), 2.2, 0, Math.PI * 2); context.fillStyle = blue; context.fill() }
       context.globalAlpha = 1
     }
-  }, [obstacles, splash, whaleY])
+  }, [obstacles, sizeRevision, splash, whaleY])
   return <canvas ref={canvas} className={css.runnerCanvas} aria-hidden="true"/>
 }
 
@@ -248,11 +271,23 @@ function RunnerGame({ phase, round, score, onScore, finish }: { phase: Phase; ro
 }
 
 export function WhaleArcade({ t }: Props) {
-  const [open, setOpen] = useState(false); const [game, setGame] = useState<GameId | null>(null); const [phase, setPhase] = useState<Phase>('ready'); const [score, setScore] = useState(0); const [round, setRound] = useState(0); const startedAt = useRef(Date.now())
-  const select = (id: GameId) => { setGame(id); setPhase('ready'); setScore(0) }
-  const close = () => { setOpen(false); setPhase(value => value === 'playing' ? 'paused' : value) }
-  const updatePhase = (next: Phase) => { if (next === 'playing' && phase !== 'paused') { startedAt.current = Date.now(); setRound(value => value + 1) } setPhase(next) }
-  useEffect(() => { const hidden = () => { if (document.hidden) setPhase(value => value === 'playing' ? 'paused' : value) }; document.addEventListener('visibilitychange', hidden); return () =>{  document.removeEventListener('visibilitychange', hidden); } }, [])
+  const [open, setOpen] = useState(false); const [game, setGame] = useState<GameId | null>(null); const [phase, setPhase] = useState<Phase>('ready'); const [score, setScore] = useState(0); const [round, setRound] = useState(0); const [leaderboardGame, setLeaderboardGame] = useState<GameId>('jump')
+  const phaseRef = useRef<Phase>('ready'); const activeTimer = useRef(createActiveTimer()); const launcher = useRef<HTMLButtonElement>(null)
+  const updatePhase = useCallback((next: Phase) => {
+    const current = phaseRef.current
+    if (current === next) return
+    if (current === 'playing') activeTimer.current.pause()
+    if (next === 'playing') {
+      if (current === 'paused') activeTimer.current.resume()
+      else { activeTimer.current.start(); setRound(value => value + 1) }
+    }
+    phaseRef.current = next; setPhase(next)
+  }, [])
+  const select = (id: GameId) => { setGame(id); setLeaderboardGame(id); phaseRef.current = 'ready'; setPhase('ready'); setScore(0) }
+  const close = useCallback(() => { if (phaseRef.current === 'playing') updatePhase('paused'); setOpen(false); launcher.current?.focus() }, [updatePhase])
+  const back = useCallback(() => { updatePhase('ready'); setGame(null) }, [updatePhase])
+  const getDuration = useCallback(() => Math.round(activeTimer.current.read()), [])
+  useEffect(() => { const hidden = () => { if (document.hidden && phaseRef.current === 'playing') updatePhase('paused') }; document.addEventListener('visibilitychange', hidden); return () =>{  document.removeEventListener('visibilitychange', hidden); } }, [updatePhase])
   const gameBody = useMemo(() => (finish: (n: number) => void) => {
     if (game === 'jump') return <JumpGame phase={phase} round={round} score={score} onScore={setScore} finish={finish}/>
     if (game === 'catch') return <CatchGame phase={phase} round={round} score={score} onScore={setScore} finish={finish}/>
@@ -260,10 +295,10 @@ export function WhaleArcade({ t }: Props) {
     return null
   }, [game, phase, round, score])
   return <div className={css.root}>
-    {open && <div className={css.panel} data-in-game={game !== null || undefined} role="dialog" aria-label={t('title')}>{game === null && <header><div><h2>{t('title')}</h2><p>{t('subtitle')}</p></div><button type="button" className={css.iconButton} onClick={close} aria-label={t('close')}>×</button></header>}
-      {game === null ? <div className={css.catalog}>{(Object.keys(GAME_COPY) as GameId[]).map(id => <button type="button" key={id} onClick={() =>{  select(id); }}><CatalogIcon kind={GAME_COPY[id].icon}/><strong>{t(GAME_COPY[id].name)}</strong><small>{t(GAME_COPY[id].desc)}</small><b>{t('best')} {readScores(id)[0]?.score ?? 0}</b></button>)}</div>
-        : <GameChrome game={game} phase={phase} score={score} startedAt={startedAt.current} onPhase={updatePhase} onScore={setScore} onBack={() => { setGame(null); setPhase('ready') }} onClose={close} t={t} renderGame={gameBody}/>}
-    </div>}
-    <button type="button" className={css.launcher} onClick={() => { if (open) close(); else setOpen(true) }} aria-label={t('launcher')} aria-expanded={open}><WhaleMark/></button>
+    <div className={css.panel} data-in-game={game !== null || undefined} role="dialog" aria-label={t('title')} hidden={!open}>{game === null && <header><div><h2>{t('title')}</h2><p>{t('subtitle')}</p></div><button type="button" className={css.iconButton} onClick={close} aria-label={t('close')}>×</button></header>}
+      {game === null ? <><div className={css.catalog}>{(Object.keys(GAME_COPY) as GameId[]).map(id => <button type="button" key={id} onClick={() =>{  select(id); }}><CatalogIcon kind={GAME_COPY[id].icon}/><strong>{t(GAME_COPY[id].name)}</strong><small>{t(GAME_COPY[id].desc)}</small><b>{t('best')} {readScores(id)[0]?.score ?? 0}</b></button>)}</div><Leaderboard game={leaderboardGame} onGame={setLeaderboardGame} t={t}/></>
+        : <GameChrome game={game} phase={phase} score={score} getDuration={getDuration} onPhase={updatePhase} onScore={setScore} onBack={back} onClose={close} t={t} renderGame={gameBody}/>}
+    </div>
+    <button ref={launcher} type="button" className={css.launcher} onClick={() => { if (open) close(); else setOpen(true) }} aria-label={t('launcher')} aria-expanded={open}><WhaleMark/></button>
   </div>
 }

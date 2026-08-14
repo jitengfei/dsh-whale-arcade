@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** Browser registration, local leaderboard, node half, and invariant ownership. */
 import { Context } from '@deepseek-ai/cordis'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import InvariantRegistry from '@deepseek-ai/dsh-invariants'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
 import { apply, inject } from '../src/client/index.ts'
@@ -11,6 +11,7 @@ import { readScores, recordScore } from '../src/client/leaderboard.ts'
 
 describe('ui-whale-arcade browser half', () => {
   beforeEach(() =>{  localStorage.clear() })
+  afterEach(() =>{  vi.restoreAllMocks() })
 
   it('registers the overlay entry and removes it with its fiber', async () => {
     const ctx = new Context()
@@ -29,6 +30,20 @@ describe('ui-whale-arcade browser half', () => {
     const scores = readScores('jump')
     expect(scores).toHaveLength(10)
     expect(scores[0]).toMatchObject({ score: 2, durationMs: 89 })
+  })
+
+  it('normalizes unsorted, oversized, and malformed browser data', () => {
+    const values = Array.from({ length: 12 }, (_, index) => ({ score: index, durationMs: 100 + index, achievedAt: index }))
+    localStorage.setItem('dsh.whale-arcade.scores.v1', JSON.stringify({ jump: [null, { score: 99 }, ...values.reverse()] }))
+    const scores = readScores('jump')
+    expect(scores).toHaveLength(10)
+    expect(scores.map(entry => entry.score)).toEqual([11, 10, 9, 8, 7, 6, 5, 4, 3, 2])
+  })
+
+  it('returns the completed table when browser storage rejects a write', () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() =>{  throw new DOMException('quota exceeded', 'QuotaExceededError') })
+    expect(() => recordScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).not.toThrow()
+    expect(recordScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).toEqual([{ score: 8, durationMs: 1200, achievedAt: 1 }])
   })
 })
 

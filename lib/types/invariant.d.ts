@@ -6,4 +6,3 @@ export declare const name = "client-ui-whale-arcade-invariant";
 export declare const inject: string[];
 /** Register the package invariant companion. */
 export declare const apply: (ctx: Context) => Promise<() => void>;
-//# sourceMappingURL=invariant.d.ts.map
