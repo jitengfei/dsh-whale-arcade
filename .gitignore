@@ -1,0 +1,12 @@
+node_modules/
+*.log
+.DS_Store
+.env
+.env.*
+coverage/
+lib/**/*.map
+lib/**/*.js
+!lib/index.js
+!lib/invariant.js
+!lib/client.js
+lib/tsconfig.tsbuildinfo
