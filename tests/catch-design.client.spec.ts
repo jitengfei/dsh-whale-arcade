@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { catchSpawnDelay, createCatchDesign, scheduleCatchSpawn } from '../src/client/catch-design.ts'
-import { catchCollides, catchHitOutcome } from '../src/client/catch-physics.ts'
+import { catchSpawnDelay, createCatchDesign, scheduleCatchSpawn } from '../src/client/games/catch/design.ts'
+import { catchCollides, catchHitOutcome } from '../src/client/games/catch/physics.ts'
 
 function sequence(...values: number[]): () => number {
   let index = 0

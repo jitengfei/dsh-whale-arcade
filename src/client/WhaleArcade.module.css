@@ -16,7 +16,7 @@
 .panel header p { margin: 3px 0 0; color: var(--dsw-alias-label-secondary); }
 .panel button { color: inherit; font: inherit; }
 .iconButton { width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--dsw-alias-interactive-bg-hover); cursor: pointer; font-size: 22px !important; }
-.catalog { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+.catalog { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
 .catalog > button { min-width: 0; padding: 13px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; border: 1px solid var(--dsw-alias-border-l1); border-radius: 14px; background: var(--dsw-alias-bg-layer-1); cursor: pointer; }
 .catalog > button:hover { background: var(--dsw-alias-interactive-bg-hover); border-color: var(--dsw-alias-border-l3); transform: translateY(-2px); }
 .catalog small { min-height: 48px; color: var(--dsw-alias-label-secondary); line-height: 16px; }
@@ -99,5 +99,5 @@
 @keyframes bubbles { from { transform: translateY(0) scale(.7); } to { transform: translateY(-230px) scale(1.15); opacity: 0; } }
 @keyframes splash { to { transform: translate(var(--splash-x), var(--splash-y)) scale(.25); opacity: 0; } }
 @keyframes whaleFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-@media (max-width: 560px) { .root { right: 12px; bottom: 12px; } .catalog { grid-template-columns: 1fr; } .catalog > button { display: grid; grid-template-columns: 60px 1fr auto; text-align: left; } .catalog small { min-height: 0; } .hint { display: none; } .gameBar { gap: 7px; } .scoresHeader { align-items: flex-start; flex-direction: column; } .scoreTabs { width: 100%; } .scoreTabs button { flex: 1; } }
+@media (max-width: 560px) { .root { right: 12px; bottom: 12px; } .catalog { grid-template-columns: 1fr; } .catalog > button { display: grid; grid-template-columns: 60px 1fr auto; text-align: left; } .catalog small { min-height: 0; } .hint:not([data-status]) { display: none; } .gameBar { gap: 7px; } .scoresHeader { align-items: flex-start; flex-direction: column; } .scoreTabs { width: 100%; } .scoreTabs button { flex: 1; } }
 @media (prefers-reduced-motion: reduce) { .launcher, .oceanWaves i, .skyBubbles i, .splash i { transition: none; animation: none; } }

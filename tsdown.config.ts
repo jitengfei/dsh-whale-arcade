@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { basename, dirname, relative, resolve as resolvePath } from 'node:path'
+import { dirname, relative, resolve as resolvePath } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { UserConfig } from 'tsdown'
 import { transform } from 'lightningcss'
@@ -46,7 +46,7 @@ function cssModulesPlugin(): NonNullable<UserConfig['plugins']>[number] {
           .map(([local, value]) => [local, value.name] as const)
           .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0),
       )
-      const tagId = `${ID}/${basename(filePath)}`
+      const tagId = `${ID}/${stablePath}`
       return [
         `const css = ${JSON.stringify(code.toString())};`,
         `const tagId = ${JSON.stringify(tagId)};`,

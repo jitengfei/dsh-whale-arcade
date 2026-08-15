@@ -3,7 +3,7 @@ import {
   RUNNER_OBSTACLES,
   runnerCollides,
   type RunnerObstacleKind,
-} from '../src/client/runner-physics.ts'
+} from '../src/client/games/runner/physics.ts'
 
 const WIDTH = 560
 const HEIGHT = 300

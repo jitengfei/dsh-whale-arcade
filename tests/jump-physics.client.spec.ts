@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { cavePassedWhale, jumpCollides } from '../src/client/jump-physics.ts'
+import { cavePassedWhale, jumpCollides } from '../src/client/games/jump/physics.ts'
 
 const cave = { x: 19, gap: 50, opening: 34, gapBefore: 50 }
 

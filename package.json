@@ -1,6 +1,6 @@
 {
   "name": "dsh-whale-arcade",
-  "description": "Community-maintained floating whale arcade for DeepSeek Harness with three browser-local games",
+  "description": "Community-maintained floating whale arcade for DeepSeek Harness with four browser-local games",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -45,7 +45,7 @@
   "bugs": {
     "url": "https://github.com/jitengfei/dsh-whale-arcade/issues"
   },
-  "keywords": ["deepseek-harness", "dsh-plugin", "whale", "arcade", "browser-game"],
+  "keywords": ["deepseek-harness", "dsh-plugin", "whale", "arcade", "browser-game", "gomoku"],
   "engines": {
     "node": "^22.19.0 || >=24.0.0",
     "pnpm": ">=11.7.0 <12"

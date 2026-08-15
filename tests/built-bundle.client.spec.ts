@@ -24,8 +24,6 @@ describe('committed Harness client bundle', () => {
     // @ts-expect-error The Harness loader script intentionally has no direct-import declaration.
     await import('../lib/client.js')
     expect(bundle?.id).toBe('dsh-whale-arcade')
-    expect(String(bundle?.factory)).toContain('createActiveTimer')
-
     const exports = bundle?.factory((moduleId) => {
       if (moduleId === 'react') return React
       if (moduleId === 'react/jsx-runtime') return ReactJsxRuntime

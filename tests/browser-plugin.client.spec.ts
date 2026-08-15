@@ -7,7 +7,7 @@ import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
 import { apply, inject } from '../src/client/index.ts'
 import { apply as applyNode } from '../src/index.ts'
 import * as ArcadeInvariant from '../src/invariant.ts'
-import { readScores, recordScore } from '../src/client/leaderboard.ts'
+import { readHighScores, recordHighScore } from '../src/client/runtime/records.ts'
 
 describe('ui-whale-arcade browser half', () => {
   beforeEach(() =>{  localStorage.clear() })
@@ -26,8 +26,8 @@ describe('ui-whale-arcade browser half', () => {
   })
 
   it('orders scores by value, duration, then achievement time and caps ten', () => {
-    for (let i = 0; i < 12; i += 1) recordScore('jump', { score: i % 3, durationMs: 100 - i, achievedAt: i })
-    const scores = readScores('jump')
+    for (let i = 0; i < 12; i += 1) recordHighScore('jump', { score: i % 3, durationMs: 100 - i, achievedAt: i })
+    const scores = readHighScores('jump')
     expect(scores).toHaveLength(10)
     expect(scores[0]).toMatchObject({ score: 2, durationMs: 89 })
   })
@@ -35,15 +35,15 @@ describe('ui-whale-arcade browser half', () => {
   it('normalizes unsorted, oversized, and malformed browser data', () => {
     const values = Array.from({ length: 12 }, (_, index) => ({ score: index, durationMs: 100 + index, achievedAt: index }))
     localStorage.setItem('dsh.whale-arcade.scores.v1', JSON.stringify({ jump: [null, { score: 99 }, ...values.reverse()] }))
-    const scores = readScores('jump')
+    const scores = readHighScores('jump')
     expect(scores).toHaveLength(10)
     expect(scores.map(entry => entry.score)).toEqual([11, 10, 9, 8, 7, 6, 5, 4, 3, 2])
   })
 
   it('returns the completed table when browser storage rejects a write', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() =>{  throw new DOMException('quota exceeded', 'QuotaExceededError') })
-    expect(() => recordScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).not.toThrow()
-    expect(recordScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).toEqual([{ score: 8, durationMs: 1200, achievedAt: 1 }])
+    expect(() => recordHighScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).not.toThrow()
+    expect(recordHighScore('catch', { score: 8, durationMs: 1200, achievedAt: 1 })).toEqual([{ score: 8, durationMs: 1200, achievedAt: 1 }])
   })
 })
 

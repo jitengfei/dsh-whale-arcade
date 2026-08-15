@@ -4,7 +4,7 @@ import {
   runnerGapRange,
   runnerSpeed,
   runnerStage,
-} from '../src/client/runner-design.ts'
+} from '../src/client/games/runner/design.ts'
 
 function sequence(...values: number[]): () => number {
   let index = 0

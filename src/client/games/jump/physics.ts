@@ -1,4 +1,4 @@
-import type { CaveDesign } from './jump-design.ts'
+import type { CaveDesign } from './design.ts'
 
 export interface CavePosition extends CaveDesign { x: number }
 

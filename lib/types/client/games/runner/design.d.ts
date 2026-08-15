@@ -1,4 +1,4 @@
-import type { RunnerObstacleKind, RunnerObstacleModel } from './runner-physics.ts';
+import type { RunnerObstacleKind, RunnerObstacleModel } from './physics.ts';
 export type RunnerGapBand = 'short' | 'medium' | 'long';
 export type RunnerStage = 'intro' | 'mixed' | 'advanced';
 export interface RunnerHistory {

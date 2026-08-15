@@ -1,0 +1,383 @@
+.ocean {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 368px;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--dsw-alias-bg-layer-2), var(--dsw-alias-state-business-tertiary));
+}
+
+.light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(116deg, transparent 17%, var(--dsw-alias-interactive-bg-hover) 19%, transparent 38%, var(--dsw-alias-interactive-bg-hover) 41%, transparent 67%);
+  opacity: .34;
+}
+
+.turnStatus {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  width: 88px;
+  height: 24px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--dsw-alias-bg-layer-2) 80%, transparent);
+  box-shadow: 0 2px 8px var(--dsw-alias-interactive-bg-active);
+}
+
+.statusWhale {
+  display: grid;
+  width: 24px;
+  height: 18px;
+  place-items: center;
+  opacity: .34;
+  transition: opacity var(--ds-transition-duration-slow) var(--ds-ease-in-out), transform var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.turnStatus[data-turn="player"] .statusPlayer,
+.turnStatus[data-turn="ai"] .statusAi {
+  opacity: 1;
+  transform: translateY(-1px) scale(1.08);
+}
+
+.turnTide {
+  display: flex;
+  width: 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.turnTide i {
+  width: 3px;
+  height: 3px;
+  border: 1px solid var(--dsw-alias-state-business-primary);
+  border-radius: 50%;
+  opacity: .3;
+}
+
+.turnStatus[data-thinking="true"] .turnTide i {
+  animation: think 1s ease-in-out infinite;
+}
+
+.turnStatus[data-thinking="true"] .turnTide i:nth-child(2) {
+  animation-delay: .14s;
+}
+
+.turnStatus[data-thinking="true"] .turnTide i:nth-child(3) {
+  animation-delay: .28s;
+}
+
+.board {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  width: min(320px, calc(100% - 20px));
+  aspect-ratio: 1;
+  padding: 8px;
+  box-sizing: border-box;
+  grid-template-rows: repeat(15, minmax(0, 1fr));
+  border: 1px solid var(--dsw-alias-border-l3);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--dsw-alias-state-business-tertiary) 48%, var(--dsw-alias-bg-layer-1));
+  box-shadow: 0 8px 24px var(--dsw-alias-interactive-bg-active), inset 0 0 32px var(--dsw-alias-interactive-bg-hover);
+  touch-action: manipulation;
+}
+
+.row {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: repeat(15, minmax(0, 1fr));
+}
+
+.cell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  appearance: none;
+  border: 0;
+  outline: none;
+  color: inherit;
+  background: transparent;
+  cursor: default;
+}
+
+.cell::before,
+.cell::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--dsw-alias-border-l3);
+  opacity: .58;
+}
+
+.cell::before {
+  top: calc(50% - .5px);
+  right: 0;
+  left: 0;
+  height: 1px;
+}
+
+.cell::after {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - .5px);
+  width: 1px;
+}
+
+.cell[data-star]:not([data-stone]) {
+  background: radial-gradient(circle at center, var(--dsw-alias-label-secondary) 0 1.7px, transparent 2px);
+}
+
+.cell[data-playable="true"] {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cell[data-playable="true"]:hover {
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 5px color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent);
+  }
+}
+
+.cell:focus-visible {
+  z-index: 6;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dsw-alias-state-business-primary) 68%, transparent);
+}
+
+.piece {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border-radius: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+  transition: scale var(--ds-transition-duration-slow) var(--ds-ease-in-out), filter var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.piece::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-bg-layer-2);
+  border-radius: 50%;
+  background: var(--dsw-alias-state-warn-primary);
+  opacity: 0;
+}
+
+.cell[data-last] .piece::after {
+  opacity: 1;
+}
+
+.cell[data-winning] {
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--dsw-alias-state-warn-primary) 12%, transparent);
+}
+
+.cell[data-winning] .piece {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--dsw-alias-state-warn-primary) 58%, transparent));
+  scale: 1.08;
+}
+
+.stone {
+  --gomoku-foam: var(--dsw-static-neutral-00);
+  --gomoku-ink: var(--dsw-static-deepseek-900);
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: center;
+  filter: drop-shadow(0 1px 1px var(--dsw-alias-interactive-bg-active));
+}
+
+.stoneBody,
+.stoneTail {
+  stroke-linejoin: round;
+}
+
+.playerStone .stoneBody,
+.playerStone .stoneTail {
+  fill: var(--dsw-alias-state-business-primary);
+  stroke: color-mix(in srgb, var(--dsw-alias-state-business-primary) 78%, var(--gomoku-ink));
+  stroke-width: .65px;
+}
+
+.playerStone .stoneBelly {
+  fill: var(--gomoku-foam);
+}
+
+.playerStone .stoneEye {
+  fill: var(--gomoku-foam);
+}
+
+.playerStone .stoneSmile {
+  stroke: var(--gomoku-foam);
+}
+
+.aiStone {
+  transform: scaleX(-1);
+}
+
+.aiStone .stoneBody,
+.aiStone .stoneTail {
+  fill: var(--gomoku-foam);
+  stroke: var(--dsw-alias-state-business-primary);
+  stroke-width: 1.15px;
+}
+
+.aiStone .stoneBelly {
+  fill: color-mix(in srgb, var(--dsw-alias-state-business-primary) 15%, var(--gomoku-foam));
+}
+
+.aiStone .stoneEye {
+  fill: var(--gomoku-ink);
+}
+
+.aiStone .stoneSmile {
+  stroke: var(--dsw-alias-state-business-primary);
+}
+
+.stoneSmile,
+.stoneSpout {
+  fill: none;
+  stroke-width: 1.25px;
+  stroke-linecap: round;
+}
+
+.stoneSpout {
+  stroke: var(--dsw-alias-state-business-primary);
+}
+
+.waves {
+  position: absolute;
+  right: -4%;
+  bottom: -11px;
+  left: -4%;
+  z-index: 2;
+  height: 54px;
+  pointer-events: none;
+}
+
+.waves i {
+  position: absolute;
+  inset: 0;
+  background: var(--dsw-alias-state-business-primary);
+  opacity: .12;
+  clip-path: polygon(0 40%, 10% 20%, 22% 44%, 36% 25%, 50% 47%, 65% 22%, 79% 45%, 90% 25%, 100% 42%, 100% 100%, 0 100%);
+}
+
+.waves i:last-child {
+  translate: 4% 8px;
+  opacity: .08;
+}
+
+@keyframes think {
+  0%, 100% { transform: translateY(0); opacity: .25; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+
+@media (max-width: 420px) {
+  .ocean {
+    height: max(286px, min(350px, calc(100vw - 12px)));
+  }
+
+  .board {
+    width: min(320px, calc(100% - 14px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusWhale,
+  .piece {
+    transition: none;
+  }
+
+  .turnStatus[data-thinking="true"] .turnTide i {
+    animation: none;
+  }
+}
+
+.setup {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.setup > span {
+  color: var(--dsw-alias-label-primary);
+}
+
+.setup > div {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 11px;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.setup button[data-selected] {
+  color: var(--dsw-alias-state-business-primary);
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+  box-shadow: inset 0 0 0 1px var(--dsw-alias-state-business-primary);
+}
+
+.catalogIcon {
+  overflow: visible;
+}
+
+.catalogGrid {
+  position: absolute;
+  inset: 4px 8px;
+  border: 1px solid var(--dsw-alias-border-l3);
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--dsw-alias-border-l3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--dsw-alias-border-l3) 1px, transparent 1px),
+    var(--dsw-alias-state-business-tertiary);
+  background-size: 9px 9px;
+  opacity: .7;
+}
+
+.catalogWhale {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  width: 22px;
+  height: 17px;
+  place-items: center;
+}
+
+.catalogPlayer {
+  top: 5px;
+  left: 6px;
+}
+
+.catalogAi {
+  right: 5px;
+  bottom: 4px;
+}

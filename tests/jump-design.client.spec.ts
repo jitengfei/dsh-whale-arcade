@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createCave, jumpSpeed, positionNextCave } from '../src/client/jump-design.ts'
+import { createCave, jumpSpeed, positionNextCave } from '../src/client/games/jump/design.ts'
 
 function sequence(...values: number[]): () => number {
   let index = 0
