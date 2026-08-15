@@ -23,12 +23,10 @@ All four games support start, pause, resume, and restart after a round. The thre
 
 ## Install
 
-Before installing, confirm that DeepSeek Harness starts with `dsh web` and that `pnpm` is available on `PATH`. Harness invokes `pnpm` for plugin management.
-
-The plugin currently installs directly from GitHub and is not published to npm:
+Before installing, confirm that DeepSeek Harness starts with `dsh web` and that `pnpm` is available on `PATH`. Harness invokes `pnpm` for plugin management. Install the prebuilt package from npm:
 
 ```sh
-dsh plugin --profile web add github:jitengfei/dsh-whale-arcade
+dsh plugin --profile web add dsh-whale-arcade
 dsh web
 ```
 
@@ -37,11 +35,13 @@ If `dsh web` is already running, stop the old process, restart it, and refresh t
 If `dsh` is not installed, first follow the [official DeepSeek Harness run instructions](https://github.com/deepseek-ai/deepseek-harness#run). Users who run Harness through `npx` can instead use:
 
 ```sh
-npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add github:jitengfei/dsh-whale-arcade
+npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add dsh-whale-arcade
 npx @deepseek-ai/dsh@0.1.0-rc.6 web
 ```
 
 The current code has been installed and run against DeepSeek Harness `0.1.0-rc.6`. Harness remains a developer preview, and later versions may introduce incompatible changes.
+
+To test the latest unreleased commit instead of the npm release, use `github:jitengfei/dsh-whale-arcade` as the package argument.
 
 ### Update or Remove
 

@@ -23,12 +23,10 @@
 
 ## 安装
 
-安装前请确认 DeepSeek Harness 能通过 `dsh web` 启动，并且 `pnpm` 位于 `PATH` 中。Harness 的插件命令会调用 `pnpm`。
-
-本插件目前直接从 GitHub 安装，尚未发布 npm 包：
+安装前请确认 DeepSeek Harness 能通过 `dsh web` 启动，并且 `pnpm` 位于 `PATH` 中。Harness 的插件命令会调用 `pnpm`。推荐直接安装 npm 中的预构建包：
 
 ```sh
-dsh plugin --profile web add github:jitengfei/dsh-whale-arcade
+dsh plugin --profile web add dsh-whale-arcade
 dsh web
 ```
 
@@ -37,11 +35,13 @@ dsh web
 还没有 `dsh` 时，请先按 [DeepSeek Harness 官方说明](https://github.com/deepseek-ai/deepseek-harness#run) 运行 Harness；使用 `npx` 的用户也可以执行：
 
 ```sh
-npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add github:jitengfei/dsh-whale-arcade
+npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add dsh-whale-arcade
 npx @deepseek-ai/dsh@0.1.0-rc.6 web
 ```
 
 当前代码已在 DeepSeek Harness `0.1.0-rc.6` 上完成安装与运行验证。Harness 仍处于开发者预览阶段，后续版本可能包含不兼容变更。
+
+如果需要测试尚未发布到 npm 的最新提交，请把包参数换成 `github:jitengfei/dsh-whale-arcade`。
 
 ### 更新或卸载
 
