@@ -21,6 +21,22 @@
 
 四个游戏均支持开始、暂停、继续和结束后重开。前三款积分游戏会在目录中显示保存在当前浏览器站点（origin）的前十名成绩；同分时按实际游玩用时和达成时间排序。五子棋不写入排行榜；棋盘与所选难度只存在于当前已挂载的游戏中，关闭浮层会暂停并保留现场，返回游戏目录或刷新页面则会重置。手动暂停、关闭浮层或隐藏浏览器标签页时不会累计游玩时间。
 
+## 界面预览
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/01-catalog.png" alt="鲸鱼游戏中心目录与本地排行榜" width="760">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/02-whale-jump.png" alt="鲸鱼跃浪游戏画面" width="49%">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/03-blue-whale-treasure.png" alt="蓝鲸寻宝游戏画面" width="49%">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/04-coast-runner.png" alt="鲸跃海岸线游戏画面" width="49%">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/05-ocean-gomoku.png" alt="鲸海五子棋游戏画面" width="49%">
+</p>
+
 ## 安装
 
 安装前请确认 DeepSeek Harness 能通过 `dsh web` 启动，并且 `pnpm` 位于 `PATH` 中。Harness 的插件命令会调用 `pnpm`。推荐直接安装 npm 中的预构建包：

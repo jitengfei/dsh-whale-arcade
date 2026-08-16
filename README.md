@@ -21,6 +21,22 @@ English | [中文](README.zh.md)
 
 All four games support start, pause, resume, and restart after a round. The three score games expose Top 10 tables stored for the current browser origin; ties are ordered by active play time and achievement time. Gomoku does not write a leaderboard. Its board and selected difficulty exist only while that game remains mounted: closing the panel pauses and preserves them, while returning to the catalog or reloading resets them. Manual pauses, closing the panel, and hiding the browser tab do not count toward play time.
 
+## Screenshots
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/01-catalog.png" alt="Whale Arcade catalog and local leaderboard" width="760">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/02-whale-jump.png" alt="Whale Wave gameplay" width="49%">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/03-blue-whale-treasure.png" alt="Blue Whale Treasure gameplay" width="49%">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/04-coast-runner.png" alt="Whale Coast Run gameplay" width="49%">
+  <img src="https://raw.githubusercontent.com/jitengfei/dsh-whale-arcade/main/assets/screenshots/05-ocean-gomoku.png" alt="Ocean Gomoku gameplay" width="49%">
+</p>
+
 ## Install
 
 Before installing, confirm that DeepSeek Harness starts with `dsh web` and that `pnpm` is available on `PATH`. Harness invokes `pnpm` for plugin management. Install the prebuilt package from npm:
